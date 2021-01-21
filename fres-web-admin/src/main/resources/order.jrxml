@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.0.final using JasperReports Library version 6.12.1-ac0eebdb29e4c0985457bab279a6db744d661530  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Order01" pageWidth="900" pageHeight="842" columnWidth="860" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="31f96403-2eb6-4e96-904f-5958a09e7519">
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter (4)"/>
+    <queryString language="SQL">
+        <![CDATA[select users.fullname, users.username ,orders.totalprice, orders.status, GROUP_CONCAT(orderdetail.price SEPARATOR ', ') AS 'price', GROUP_CONCAT(orderdetail.quantity SEPARATOR ', ') AS 'quantity', GROUP_CONCAT(product.name SEPARATOR ', ') AS 'productName', orders.createdat, orders.updatedat
+from orders inner join orderdetail on orderdetail.orders_id = orders.order_id
+inner join users on orders.user_id = users.user_id
+inner join product on product.product_id = orderdetail.product_id group by orders.order_id]]>
+    </queryString>
+    <field name="fullname" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="fullname"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+    </field>
+    <field name="username" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="username"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+    </field>
+    <field name="totalprice" class="java.lang.Double">
+        <property name="com.jaspersoft.studio.field.label" value="totalprice"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="orders"/>
+    </field>
+    <field name="status" class="java.lang.Integer">
+        <property name="com.jaspersoft.studio.field.label" value="status"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="orders"/>
+    </field>
+    <field name="price" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="price"/>
+    </field>
+    <field name="quantity" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="quantity"/>
+    </field>
+    <field name="productName" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="productName"/>
+    </field>
+    <field name="createdat" class="java.sql.Timestamp">
+        <property name="com.jaspersoft.studio.field.label" value="createdat"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="orders"/>
+    </field>
+    <field name="updatedat" class="java.sql.Timestamp">
+        <property name="com.jaspersoft.studio.field.label" value="updatedat"/>
+        <property name="com.jaspersoft.studio.field.tree.path" value="orders"/>
+    </field>
+    <background>
+        <band/>
+    </background>
+    <title>
+        <band height="72">
+            <frame>
+                <reportElement mode="Opaque" x="-20" y="-20" width="900" height="92" backcolor="#006699" uuid="b93a2c7c-0d5f-494e-b4b4-7719b24dcec7"/>
+                <staticText>
+                    <reportElement x="20" y="20" width="519" height="43" forecolor="#FFFFFF" uuid="9350a5fd-8bc2-4e02-918b-4ad295d31f95"/>
+                    <textElement>
+                        <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                    </textElement>
+                    <text><![CDATA[TITLE]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="195" y="43" width="665" height="20" forecolor="#FFFFFF" uuid="7a96fb6d-43ee-435a-b5b6-0edf5dd9b262"/>
+                    <textElement textAlignment="Right">
+                        <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                    </textElement>
+                    <text><![CDATA[Add a description here]]></text>
+                </staticText>
+            </frame>
+        </band>
+    </title>
+    <pageHeader>
+        <band height="13"/>
+    </pageHeader>
+    <columnHeader>
+        <band height="21">
+            <line>
+                <reportElement x="-20" y="20" width="880" height="1" forecolor="#666666" uuid="c8ff4f79-c9f1-4e2e-8d06-e94679589a0f"/>
+            </line>
+            <staticText>
+                <reportElement mode="Opaque" x="0" y="0" width="100" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="5fe6d571-4f1b-4bc3-9cfa-d0b1768b8f23">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ce6c862b-dffe-4eb5-8589-18f051631540"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <text><![CDATA[fullname]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="100" y="0" width="90" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="29f01cf3-4e9b-4372-8456-e6a6556d896b">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7cf22915-cdf5-4527-a784-431c6f922c0a"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <text><![CDATA[username]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="190" y="0" width="61" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="53751625-8fed-459e-b1c5-1490877cb586">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1db135dd-d82a-45f5-b9ac-d9343a95d4e3"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <text><![CDATA[totalprice]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="251" y="0" width="71" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="79a49480-6d2f-4e47-8401-b57704dd1f83">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f3d323cc-3088-411a-986f-70a2a89440fd"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <text><![CDATA[status]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="322" y="0" width="86" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="e0cd6125-475e-4acf-9b56-d8b2225e092a">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a2447094-4298-4c87-b052-01759eb59666"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <text><![CDATA[price]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="408" y="0" width="81" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="45069afe-89bc-4f1d-86c8-a0d0d4c6fa67">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="aba7840d-cdc8-4e9c-a3df-6739986b47c6"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <text><![CDATA[quantity]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="489" y="0" width="101" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="bcde744b-0a62-428d-b499-878a6322fe7f">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5ba6f137-7490-4226-a3fd-ecd7b03b1a67"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <text><![CDATA[productName]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="590" y="0" width="130" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="d73a97b7-83a3-4686-8e8a-2567ad84202e">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="506bec48-5ab1-49fc-ab9e-6d2b02ce6fbc"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <text><![CDATA[createdat]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="720" y="0" width="139" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="f5457cfa-0140-4b5b-8dec-571624ea3baa">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5196015a-4d8f-4664-89cf-2977894b5f4f"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <text><![CDATA[updatedat]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="20">
+            <line>
+                <reportElement positionType="FixRelativeToBottom" x="0" y="19" width="840" height="1" uuid="45ac669f-0208-458f-b579-11fd371eda71"/>
+            </line>
+            <textField>
+                <reportElement x="0" y="0" width="100" height="20" uuid="edaa1960-6024-4fba-a562-46710ff2ff14">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ce6c862b-dffe-4eb5-8589-18f051631540"/>
+                </reportElement>
+                <textElement>
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{fullname}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="100" y="0" width="90" height="20" uuid="b448719c-4a95-45fb-bc6f-f2ad2c9315dc">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7cf22915-cdf5-4527-a784-431c6f922c0a"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{username}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="190" y="0" width="61" height="20" uuid="4d376a76-7d95-4272-82b5-ad9f20311e96">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1db135dd-d82a-45f5-b9ac-d9343a95d4e3"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{totalprice}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="251" y="0" width="71" height="20" uuid="5696df05-17f8-432b-be69-dffb007525df">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f3d323cc-3088-411a-986f-70a2a89440fd"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="322" y="0" width="86" height="20" uuid="1ae0bf21-5a8b-4ee4-988b-c32bca9b8e5e">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a2447094-4298-4c87-b052-01759eb59666"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
+            </textField>
+            <textField >
+                <reportElement x="408" y="0" width="81" height="20" uuid="e2983990-d743-4405-93f5-5c6219ed61d2">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="aba7840d-cdc8-4e9c-a3df-6739986b47c6"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+            </textField>
+            <textField >
+                <reportElement x="489" y="0" width="101" height="20" uuid="09a17cfc-ca4c-456f-99a9-9f830aff6e5f">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5ba6f137-7490-4226-a3fd-ecd7b03b1a67"/>
+                </reportElement>
+                <textElement>
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="590" y="0" width="130" height="20" uuid="730f5051-4509-45d3-997f-f94c0144ed1d">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="506bec48-5ab1-49fc-ab9e-6d2b02ce6fbc"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{createdat}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="720" y="0" width="139" height="20" uuid="7ba134b1-e4a6-45ba-a280-72b8029c7101">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5196015a-4d8f-4664-89cf-2977894b5f4f"/>
+                </reportElement>
+                <textElement textAlignment="Center">
+                    <font size="8" fontName="DejaVu Sans" pdfFontName="/DejaVuSans.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{updatedat}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <columnFooter>
+        <band/>
+    </columnFooter>
+    <pageFooter>
+        <band height="17">
+            <textField>
+                <reportElement mode="Opaque" x="0" y="4" width="800" height="13" backcolor="#E6E6E6" uuid="4a57f713-3df7-42df-9be0-2d2752fbdfbd"/>
+                <textElement textAlignment="Right"/>
+                <textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement mode="Opaque" x="315" y="4" width="525" height="13" backcolor="#E6E6E6" uuid="5a4270b3-dc25-4001-a9fc-3ebafdd4300d"/>
+                <textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <textField pattern="EEEEE dd MMMMM yyyy">
+                <reportElement x="0" y="4" width="385" height="13" uuid="ca34a579-3113-4d97-8c25-0ad99e4e1226"/>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+    <summary>
+        <band/>
+    </summary>
+</jasperReport>

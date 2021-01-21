@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Promotion Detail</title>
+    <th:block layout:fragment="headerfiles">
+        <style>
+            table, th, td {
+                border: 1px solid rgba(6, 4, 19, 0.09);
+                border-collapse: collapse;
+            }
+
+            th, td {
+                padding: 5px;
+                text-align: left;
+            }
+
+            th {
+                width: 200px;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<!-- Content Wrapper. Contains page content -->
+<div layout:fragment="content" class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Promotion detail</h1>
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a th:href="@{/home}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/promotion}">Promotion
+                            Management</a></li>
+                        <li class="breadcrumb-item active">Promotion Detail</li>
+                    </ol>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12" style="align-items: baseline">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Promotion detail</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table style="width: 100%">
+                        <tr>
+                            <th>Promotion Name</th>
+                            <td th:text="${promotion.name}"></td>
+                        </tr>
+                        <tr>
+                            <th>Percent</th>
+                            <td th:text="${promotion.percent}+'%'"></td>
+                        </tr>
+                        <tr>
+                            <th>Product</th>
+                            <td><th:block th:each="list: ${promotion.productDTOs}">
+                                <p th:text="${list.productName}">Cái này có cũng được, không có cũng không sao</p>
+                            </th:block></td>
+                        </tr>
+                        <tr>
+                            <th>Start date</th>
+                            <td th:text="${promotion.startDate}"></td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>End date</th>
+                            <td th:text="${promotion.endDate}"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<th:block layout:fragment="script"></th:block>
+</body>
+</html>

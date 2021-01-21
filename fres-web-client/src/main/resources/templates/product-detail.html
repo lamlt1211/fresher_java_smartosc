@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Vegefoods - Free Bootstrap 4 Template by Colorlib</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <th:block th:include="layout/web-header"/>
+</head>
+<body class="goto-here">
+<th:block th:include="layout/wed-menu"/>
+<div class="hero-wrap hero-bread" th:style="'background-image:url('+ @{/images/bg_2.jpg} +');'">
+	<div class="container">
+		<div class="row no-gutters slider-text align-items-center justify-content-center">
+			<div class="col-md-9 ftco-animate text-center">
+				<p class="breadcrumbs"><span class="mr-2"><a th:href="@{/home}">Home</a></span> <span class="mr-2"><a href="#">Product</a></span> <span>Product Single</span></p>
+				<h1 class="mb-0 bread">Product Single</h1>
+			</div>
+		</div>
+	</div>
+</div>
+<br>
+<br>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 mb-5 ftco-animate fadeInUp ftco-animated">
+            <a th:href="${product.image}" class="image-popup">
+                <img th:src="${product.image}" class="img-fluid" alt="Colorlib Template">
+            </a>
+        </div>
+        <div class="col-lg-6 product-details pl-md-5 ftco-animate fadeInUp ftco-animated">
+            <h1><a th:text="${product.productName}"></a></h1>
+
+            <div class="d-flex">
+                <th:block th:if="${product.promotions != null}">
+                    <div class="pricing" th:each="promotion : ${product.promotions}">
+                        <p class="price"
+                           th:with="result=${product.price -(product.price * promotion.percent / 100)}">
+                            <span class="price-sale"
+                                  th:text="${#numbers.formatDecimal(result, 0, 'COMMA', 0, 'POINT')}+ ' đ'"></span>
+                            <span class="status"
+                                  th:text="'-'+${#numbers.formatDecimal(promotion.percent, 0, 'COMMA', 0, 'POINT')}+' %'"></span>
+                        </p>
+                        <p>
+                            <span class="mr-2 price-dc" style="color: #bbb; text-decoration: line-through"
+                                  th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}+ ' đ  ' "></span>
+                        </p>
+                    </div>
+                </th:block>
+
+                <th:block th:unless="${product.promotions != null}">
+                    <div class="pricing">
+                        <p class="price">
+                            <span class="price-sale"
+                                  th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
+                        </p>
+                    </div>
+                </th:block>
+            </div>
+
+
+            <p><a th:text="${product.description}"></a></p>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="form-group d-flex">
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="input-group col-md-6 d-flex mb-3">
+	             	<span class="input-group-btn mr-2">
+	                	<button type="button" class="quantity-left-minus btn" data-type="minus" data-field="">
+	                   <i class="ion-ios-remove"></i>
+	                	</button>
+	            		</span>
+                    <input type="text" id="quantity" name="quantity" class="form-control input-number" value="1" min="1"
+                           max="100">
+                    <span class="input-group-btn ml-2">
+	                	<button type="button" class="quantity-right-plus btn" data-type="plus" data-field="">
+	                     <i class="ion-ios-add"></i>
+	                 </button>
+	             	</span>
+                </div>
+                <div class="w-100"></div>
+            </div>
+            <p><a href="#" th:data-id="${product.productId}" class="btn btn-black py-3 px-5 add-product">Add to Cart</a>
+            </p>
+            <p class="info-cart"></p>
+        </div>
+    </div>
+</div>
+<section class="ftco-section">
+	<div class="container">
+		<div class="row justify-content-center mb-3 pb-3">
+			<div class="col-md-12 heading-section text-center ftco-animate fadeInUp ftco-animated">
+				<span class="subheading">Products</span>
+				<h2 class="mb-4">Related Products</h2>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<th:block th:if="${listHotProducts != null}">
+				<div class="col-md-6 col-lg-3 ftco-animate"
+					 th:each="product : ${listHotProducts}">
+					<div class="product constheight">
+						<a th:href="@{/detail/{id}(id=${product.productId})}" class="img-prod">
+							<img class="img-fluid" th:src="@{${product.image}}" style="height: 200px; width: auto"
+								 alt="Colorlib Template">
+							<!--                            <span th:each="promotion : ${product.promotions}">-->
+							<!--                                <span class="status"-->
+							<!--                                      th:text="${#numbers.formatDecimal(promotion.percent, 0, 'COMMA', 0, 'POINT')}+' %'"></span>-->
+							<!--                            </span>-->
+						</a>
+						<div class="text py-3 pb-4 px-3 text-center">
+							<h3>
+								<a href="#"><p th:text="${product.productName}"></p></a>
+							</h3>
+							<div class="d-flex">
+								<th:block th:if="${product.promotions != null}">
+									<div class="pricing" th:each="promotion : ${product.promotions}">
+										<p class="price"
+										   th:with="result=${product.price -(product.price * promotion.percent / 100)}">
+                                            <span class="price-sale"
+												  th:text="${#numbers.formatDecimal(result, 0, 'COMMA', 0, 'POINT')}+ ' đ  '"></span>
+											<span class="status thuyxinh"
+												  th:text="'-'+${#numbers.formatDecimal(promotion.percent, 0, 'COMMA', 0, 'POINT')}+' %'"></span>
+										</p>
+										<p>
+                                            <span class="mr-2 price-dc thuybeo"
+												  th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}+ ' đ '"></span>
+										</p>
+									</div>
+								</th:block>
+								<th:block th:unless="${product.promotions != null}">
+									<div class="pricing">
+										<p class="price">
+                                            <span class="price-sale thuybeo"
+												  th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
+										</p>
+									</div>
+								</th:block>
+							</div>
+							<div class="bottom-area d-flex px-3">
+								<div class="m-auto d-flex">
+									<a id="coom" href="" th:data-id="${product.productId}"
+									   class="add-to-cartInfo d-flex justify-content-center align-items-center text-center add">
+										<span><i class="ion-ios-menu"></i></span>
+									</a> <a th:href="@{/detail/{id}(id=${product.productId})}"
+											class="buy-now d-flex justify-content-center align-items-center mx-1">
+									<span><i class="ion-ios-heart"></i></span>
+								</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</th:block>
+		</div>
+	</div>
+</section>
+
+<th:block th:include="layout/web-footer"/>
+
+<script>
+    $(document).ready(function () {
+
+        var quantitiy = 0;
+        $('.quantity-right-plus').click(function (e) {
+            e.preventDefault();
+            var quantity = parseInt($('#quantity').val());
+			if (quantity < 1000) {
+				$('#quantity').val(quantity + 1);
+			}
+        });
+
+        $('.quantity-left-minus').click(function (e) {
+            e.preventDefault();
+            var quantity = parseInt($('#quantity').val());
+            if (quantity > 0) {
+                $('#quantity').val(quantity - 1);
+            }
+        });
+
+        $('.add-product').click(function (event) {
+            event.preventDefault();
+            var productId = $(this).attr("data-id");
+            var quantity = $('#quantity').val();
+
+			if (!/^[0-9]+$/.test(quantity)) {
+				/*$(this).closest('changeQuantity').find("p").html("số lượng ko đúng!")*/
+				alert("bạn cần nhập vào sô!");
+			}
+			if (quantity > 999) {
+				alert("số lượng vượt quá 1000!")
+			}
+            else {
+                $.ajax({
+                    url: "/cart/buycart",
+                    type: "GET",
+                    data: {
+                        id: productId,
+                        quantity: quantity,
+                    },
+                    success: function (value) {
+                        $('.sizeCart').html("[" + value + "]");
+                        $('.info-cart').html("bạn thêm thành công!").fadeIn( 1500 ).delay( 2000 ).fadeOut( 1500 );
+                    }
+                })
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

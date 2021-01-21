@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{fragments/layout}">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Test Page</title>
+	<th:block layout:fragment="headerfiles"></th:block>
+</head>
+<body>
+<!-- Content Wrapper. Contains page content -->
+<div layout:fragment="content" class="content-wrapper">
+	<!-- Content Header (Page header) -->
+	<div class="content-header">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h1 class="m-0 text-dark">List order</h1>
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item"><a th:href="@{/home}">Dashboard</a></li>
+						<li class="breadcrumb-item active">Order Management</li>
+					</ol>
+				</div>
+				<!-- /.col -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.container-fluid -->
+	</div>
+	<!-- /.content-header -->
+
+	<!-- Main content -->
+	<section class="content">
+		<!-- Main row -->
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="card">
+					<div class="card-header">
+						<a href="/order/export/excel" class="btn btn-primary"> <i
+								class="fas fa-user-plus ml-2"> Export Order </i>
+						</a>
+						<a th:href="@{/order/export/report/{type}(type=pdf)}" class="btn btn-danger"> <i
+								class="fas fa-file-pdf ml-2"> PDF EXPORT</i>
+						</a>
+
+						<div class="card-tools">
+							<form method="POST" th:action="@{/order}">
+								<div class="input-group input-group-sm" style="width: 150px;">
+									<input type="text" name="table_search" id="searchValue"
+										   th:value="*{searchValue}" class="form-control float-right"
+										   placeholder="Search">
+
+									<div class="input-group-append">
+										<button type="submit" class="btn btn-default">
+											<i class="fas fa-search"></i>
+										</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="card-body">
+						<table class="table table-bordered table-hover table-striped"
+							   style="text-align: center">
+							<thead>
+							<tr>
+								<th style="width: 5%">Id</th>
+								<th>Full name</th>
+								<th>Total price</th>
+								<th>Status</th>
+								<th>Created at</th>
+								<th>Updated at</th>
+								<th>Action</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr th:each="order : ${data.content}">
+								<td th:text="${order.ordersId}"></td>
+								<td th:text="${order.userDTO.fullName}"></td>
+								<td th:text="${order.totalPrice}"></td>
+								<td><th:block th:switch="${order.getStatus()}">
+									<p th:case="0" class="badge bg-primary">ON HOLD</p>
+									<p th:case="1" class="badge bg-warning">PROCESSING</p>
+									<p th:case="2" class="badge bg-success">COMPLETED</p>
+									<p th:case="3" class="badge bg-danger">CANCELLED</p>
+								</th:block></td>
+								<td th:text="${#dates.format(order.createdAt, 'dd/MM/yyyy hh:mm a')}"></td>
+								<td th:text="${#dates.format(order.updatedAt, 'dd/MM/yyyy hh:mm a')}"></td>
+								<td class="project-actions"><a
+										th:if="${order.status} == 0"> <a
+										class="btn btn-primary btn-sm"
+										th:href="@{/order/status/(id=${order.ordersId},status=${order.status})}">
+									<i class="fas fa-folder">&nbsp;&nbsp;Confirm</i>
+								</a> <a class="btn btn-danger btn-sm"
+										th:href="@{/order/status/(id=${order.ordersId},status=${3})}">
+									<i class="fas fa-folder">&nbsp;&nbsp;Cancel</i>
+								</a>
+								</a> <a th:if="${order.status} == 1"> <a
+										class="btn btn-primary btn-sm"
+										th:href="@{/order/status/(id=${order.ordersId},status=${order.status})}">
+									<i class="fas fa-folder">&nbsp;&nbsp;Success</i>
+								</a>
+								</a></td>
+							</tr>
+							</tbody>
+							<tfoot>
+							<tr>
+								<th style="width: 5%">Id</th>
+								<th>Full name</th>
+								<th>Total price</th>
+								<th>Status</th>
+								<th>Created at</th>
+								<th>Updated at</th>
+								<th>Action</th>
+							</tr>
+							</tfoot>
+						</table>
+					</div>
+					<div class="card-body">
+						<form th:action="@{/order/import}" method="post" enctype="multipart/form-data">
+
+							<input type="file" th:name="file">
+
+							<input th:type="submit" value="Import" />
+						</form>
+					</div>
+
+					<!-- /.card-body -->
+					<div class="card-footer clearfix">
+						<ul th:if="${data.totalPages > 0}"
+							class="pagination pagination-sm m-0 float-right">
+							<li class="page-item"
+								th:classappend="${currentPage}>0?'':'disabled'"><a
+									class="page-link" th:with="preIndex=${currentPage - 1}"
+									th:href="@{/order(searchValue=${searchValue},pageNo=${preIndex}<0?0:${preIndex})}">&laquo;</a></li>
+							<li class="page-item"
+								th:each="i : ${#numbers.sequence(0, data.totalPages-1)}"
+								th:classappend="${currentPage}==${i}?'active':''"><a
+									class="page-link" th:with="currentIndex=${i+1}"
+									th:text="${currentIndex}"
+									th:href="@{/order(searchValue=${searchValue},pageNo=${i})}"></a>
+							</li>
+							<li class="page-item"
+								th:classappend="${currentPage}<${data.totalPages}-1?'':'disabled'"><a
+									class="page-link" th:with="postIndex=${currentPage + 1}"
+									th:href="@{/order(searchValue=${searchValue},pageNo=${postIndex}>=${data.totalPages}?(${data.totalPages-1}):${postIndex})}">&raquo;</a></li>
+						</ul>
+						<ul th:unless="${data.totalPages > 0}"
+							class="pagination pagination-sm m-0 float-right">
+							<li class="page-item" th:classappend="disabled"><a
+									class="page-link" th:with="preIndex=${currentPage - 1}"
+									href="#">&laquo;</a></li>
+							<li class="page-item" th:classappend="'active'"><a
+									class="page-link" th:text="1"
+									th:href="@{/order(searchValue=${searchValue},pageNo=${i})}"></a>
+							</li>
+							<li class="page-item" th:classappend="disabled"><a
+									class="page-link" th:with="postIndex=${currentPage + 1}"
+									href="#">&raquo;</a></li>
+						</ul>
+					</div>
+					<!-- /.card-body -->
+				</div>
+			</div>
+		</div>
+		<!-- /.row (main row) -->
+	</section>
+	<!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<th:block layout:fragment="script"></th:block>
+</body>
+</html>

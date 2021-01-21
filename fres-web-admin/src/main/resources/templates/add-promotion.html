@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Add/Edit Promotion Page</title>
+    <th:block layout:fragment="headerfiles">
+        <!-- daterange picker -->
+        <link rel="stylesheet" th:href="@{/LTE/plugins/daterangepicker/daterangepicker.css}">
+        <!-- Tempusdominus Bbootstrap 4 -->
+        <link rel="stylesheet"
+              th:href="@{/LTE/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css}">
+        <!-- DataTables -->
+        <link rel="stylesheet" th:href="@{/LTE/plugins/datatables-bs4/css/dataTables.bootstrap4.css}">
+        <!-- iCheck for checkboxes and radio inputs -->
+        <link rel="stylesheet" th:href="@{/LTE/plugins/icheck-bootstrap/icheck-bootstrap.min.css}">
+        <link rel="stylesheet" th:href="@{/LTE/plugins/jquery-ui/jquery-ui.css}">
+    </th:block>
+    <style>
+        .error-alert {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<!-- Content Wrapper. Contains page content -->
+<div layout:fragment="content" class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Add/Edit promotion</h1>
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a th:href="@{/home}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/promotions}">Promotion
+                            Management</a></li>
+                        <li class="breadcrumb-item active">Add/Edit Promotion</li>
+                    </ol>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+        <!-- Main row -->
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Add/edit promotion</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" th:action="@{/promotions}" th:object="${promotion}">
+                            <input type="hidden" class="form-control" th:field="*{promotionId}"/>
+                            <div class="form-group">
+                                <label for="promotionName">Promotion Name</label>
+                                <p class="error-alert" th:if="${#fields.hasErrors('name')}"
+                                   th:errors="*{name}"></p>
+                                <input type="text" id="promotionName" class="form-control"
+                                       th:field="*{name}">
+                            </div>
+                            <div class="form-group">
+                                <label for="percent">Status</label>
+                                <select th:field="*{status}" class="form-control">
+                                        <option th:value="1" th:selected="${promotion.status == 1}">Active</option>
+                                        <option th:value="0">Not Active</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="percent">Discount (%)</label>
+                                <p class="error-alert" th:if="${#fields.hasErrors('percent')}"
+                                   th:errors="*{percent}"></p>
+                                <input type="number" step="any" id="percent" class="form-control"
+                                       th:readonly="${promotion.promotionId != null}" th:field="*{percent}">
+                            </div>
+                            <!-- Date and time range -->
+                            <div class="form-group">
+                                <label>Date and time range:</label>
+                                <p class="error-alert" th:if="${#fields.hasErrors('startDate')}"
+                                   th:errors="*{startDate}"></p>
+                                <p class="error-alert" th:if="${#fields.hasErrors('endDate')}"
+                                   th:errors="*{endDate}"></p>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="far fa-clock"></i></span>
+                                    </div>
+                                    <input th:readonly="${promotion.promotionId != null}" type="text"
+                                           class="form-control float-right" id="reservationtime">
+                                    <input type="hidden" id="startDate" class="form-control"
+                                           th:field="*{startDate}"/>
+                                    <input type="hidden" id="endDate" class="form-control"
+                                           th:field="*{endDate}"/>
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label>Products for event promotion:</label>
+                                <table id="dataTable" class="table table-fixed table-striped table-bordered">
+                                    <thead style="text-align: center">
+                                    <tr>
+                                        <th scope="col" class="col-10">Product name</th>
+                                        <th scope="col" class="col-2">
+                                            <div class="icheck-primary d-inline">
+                                                <input type="checkbox" id="checkAll"
+                                                       name="checkAll"/>
+                                                <label for="checkAll"></label>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="product : ${products}">
+                                        <td scope="row" class="col-10"
+                                            th:text="${product.productName}"></td>
+                                        <td th:attr="data-order=${promotion.productDTOs != null && promotion.productDTOIds.contains(product.productId)} ? 1 : 0"
+                                            class="col-2" style="text-align: center;">
+                                            <div class="icheck-primary d-inline">
+                                                <input type="checkbox" class="checkbox-product"
+                                                       th:id="'checkbox-' + ${product.productId}"
+                                                       th:field="*{productDTOIds}"
+                                                       th:value="${product.productId}"
+                                                       th:checked="${promotion.productDTOs != null && promotion.productDTOIds.contains(product.productId)}"/>
+                                                <label th:for="'checkbox-' + ${product.productId}"></label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-12">
+                                <a href="/promotions" class="btn btn-secondary float-left">Cancel</a>
+                                <input type="submit" value="Confirm" class="btn btn-success float-left"
+                                       style="margin-left: 20px">
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        <!-- /.row (main row) -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<th:block layout:fragment="script">
+    <!-- jQuery -->
+    <script th:src="@{/LTE/plugins/jquery/jquery.min.js}"></script>
+    <script th:src="@{/LTE/plugins/jquery-ui/jquery-ui.js}"></script>
+    <!-- InputMask -->
+    <script th:src="@{/LTE/plugins/moment/moment.min.js}"></script>
+    <!-- date-range-picker -->
+    <script th:src="@{/LTE/plugins/daterangepicker/daterangepicker.js}"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script th:src="@{/LTE/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js}"></script>
+    <!-- DataTables -->
+    <script th:src="@{/LTE/plugins/datatables/jquery.dataTables.js}"></script>
+    <script th:src="@{/LTE/plugins/datatables-bs4/js/dataTables.bootstrap4.js}"></script>
+    <script>
+        $(function () {
+            setUpDefaultDataTable();
+            setUpDefaultDateRangePicker();
+
+            $('#reservationtime').on("apply.daterangepicker", function (ev, picker) {
+                $('input[name="startDate"]').val(picker.startDate.format("DD/MM/YYYY"));
+                $('input[name="endDate"]').val(picker.endDate.format("DD/MM/YYYY"));
+            });
+
+            $("#checkAll").click(function () {
+                $('input:checkbox').not(this).prop('checked', this.checked);
+            });
+
+            //Datatable setup default
+            function setUpDefaultDataTable() {
+                $('#dataTable').DataTable({
+                    "paging": false,
+                    "lengthChange": false,
+                    "searching": true,
+                    "info": true,
+                    "autoWidth": false,
+                    "scrollY": "400px",
+                    "scrollCollapse": true,
+                    "ordering": true,
+                }).order([1, "desc"]).draw();
+            }
+
+            //Date range picker with time picker
+            function setUpDefaultDateRangePicker() {
+                let date = new Date();
+                let $currentDate = $.datepicker.formatDate("dd/mm/yy", date);
+
+                $('#reservationtime').daterangepicker({
+                    locale: {format: 'DD/MM/YYYY'}
+                });
+
+                if (!$('input[name="startDate"]').val()) {
+                    $('input[name="startDate"]').val($currentDate);
+                }
+
+                if (!$('input[name="endDate"]').val()) {
+                    $('input[name="endDate"]').val($currentDate);
+                }
+
+                if ($('input[name="startDate"]').val() && $('input[name="endDate"]').val()) {
+                    $('#reservationtime').val($('input[name="startDate"]').val() + " - "
+                        + $('input[name="endDate"]').val());
+                }
+            }
+        });
+    </script>
+</th:block>
+</body>
+</html>

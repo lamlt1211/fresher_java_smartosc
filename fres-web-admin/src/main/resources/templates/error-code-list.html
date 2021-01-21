@@ -1,0 +1,515 @@
+<!--HUUPD-->
+<!DOCTYPE html>
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <title>Product Management Page</title>
+    <script th:src="@{/LTE/plugins/jquery/jquery.min.js}"></script>
+    <th:block layout:fragment="headerfiles">
+        <!-- Toastr -->
+        <link rel="stylesheet" th:href="@{/LTE/plugins/toastr/toastr.min.css}"/>
+    </th:block>
+</head>
+<body>
+<!-- Content Wrapper. Contains page content -->
+<div layout:fragment="content" class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Danh sách mã lỗi</h1>
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a th:href="@{/home}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Danh sách mã lỗi</li>
+                    </ol>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Main row -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#creatError">
+                                Thêm <i
+                                    class="fas fa-plus ml-2"> </i>
+                            </button>
+                            <button type="button"
+                                    class="btn btn-xs btn-block btn-warning" data-toggle="modal"
+                                    data-target="#modal-warning"
+                                    style="width: 100px; text-transform: uppercase; float: left; margin-left: 15px;"
+                                    th:styleappend="${errors == null} ? 'display: none;' : 'display:block;'">
+                                <i class="fas fa-bell"></i>&nbsp;&nbsp;Error Found
+                            </button>
+                            <!-- Start search-->
+                            <div class="card-tools">
+                                <div class="input-group input-group-sm" style="width: 150px;">
+                                    <input type="text" name="table_search" id="searchValue"
+                                           class="form-control float-right" placeholder="Search">
+                                    <div class="input-group-append">
+                                        <button th:attr="onclick='javascript:search()'" class="btn btn-default">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                </form>
+                            </div>
+                            <!--End search-->
+                        </div>
+
+                        <!--  add data-->
+                        <div class="modal fade" id="creatError" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle1">Thêm mã lỗi ứng dụng</h5>
+                                    </div>
+                                    <form action="#">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label>Mã lỗi</label>
+                                                <input id="code2" class="form-control" type="text">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Mô tả</label>
+                                                <input id="description2" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                            </button>
+                                            <button type="button" th:attr="onclick='javascript:add()'"
+                                                    class="btn btn-primary">Lưu
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!--edit data-->
+                        <div class="modal fade" id="editError" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle2">Cập nhật mã lỗi</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form action="#">
+                                        <input id="id" type="hidden"/>
+                                        <input type="hidden" id="status">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label>Mã lỗi</label>
+                                                <input class="form-control" id="code" type="text" value="000" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Mô tả</label>
+                                                <input class="form-control" id="description" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" id="close" class="btn btn-secondary"
+                                                    data-dismiss="modal">Close
+                                            </button>
+                                            <button type="button" th:attr="onclick='javascript:update()'"
+                                                    class="btn btn-primary">Lưu
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!--                        delete-->
+                        <div class="modal fade" id="deleteError" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle5">Vô hiệu hóa mã lỗi</h5>
+                                    </div>
+                                    <form action="#">
+                                        <input id="id1" type="hidden"/>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label>Mã lỗi</label>
+                                                <input class="form-control" id="code1" type="text" value="000" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Tên lỗi</label>
+                                                <input class="form-control" id="description1" type="text" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Trang thái</label>
+                                                <input type="checkbox" id="status1" checked>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng
+                                            </button>
+                                            <button th:attr="onclick='javascript:active()'" type="button"
+                                                    class="btn btn-primary">Lưu
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Show data -->
+                        <form th:action="@{/errorcodelist}" id="formSubmit" method="get">
+                            <div class="card-body">
+                                <table class="table table-bordered table-hover table-striped"
+                                       style="text-align: center">
+                                    <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Mã lỗi</th>
+                                        <th>Mô tả</th>
+                                        <th>Trạng thái</th>
+                                        <th>Người cập nhật</th>
+                                        <th>Ngày cập nhật</th>
+                                        <th>Thực hiện</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="listresult">
+                                    <tr th:each="appcode , state: ${list}">
+                                        <td th:utext="${state.index}"></td>
+                                        <td th:utext="${appcode.code}"></td>
+                                        <td th:utext="${appcode.description}"></td>
+                                        <td th:if="${appcode.status==0}">
+                                            <input readonly type="checkbox" onclick="return false;">
+                                        </td>
+                                        <td th:unless="${appcode.status==0}">
+                                            <input readonly type="checkbox" checked onclick="return false;">
+                                        </td>
+                                        <td th:utext="${appcode.modifiedBy}"></td>
+                                        <td th:utext="${appcode.modifiedDatetime}"></td>
+                                        <td>
+                                            <button th:attr="onclick='javascript:infoedit('+ ${state.current.getAppCodeId()} +')'"
+                                                    type="button" class="btn btn-primary" data-toggle="modal"
+                                                    data-target="#editError">
+                                                Sửa <i class="fas fa-edit ml-2"> </i>
+                                            </button>
+                                            <button th:if="${appcode.status==0}"
+                                                    th:attr="onclick='javascript:infodeactive('+ ${state.current.getAppCodeId()} +')'"
+                                                    type="button" class="btn btn-primary" data-toggle="modal"
+                                                    data-target="#deleteError">
+                                                Kích hoạt <i class="fas fa-ban ml-2"> </i>
+                                            </button>
+                                            <button th:unless="${appcode.status==0}"
+                                                    th:attr="onclick='javascript:infodeactive('+ ${state.current.getAppCodeId()} +')'"
+                                                    type="button" class="btn btn-primary" data-toggle="modal"
+                                                    data-target="#deleteError">
+                                                Vô hiệu hóa<i class="fas fa-ban ml-2"> </i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Mã lỗi</th>
+                                        <th>Mô tả</th>
+                                        <th>Trạng thái</th>
+                                        <th>Người cập nhật</th>
+                                        <th>Ngày cập nhật</th>
+                                        <th>Thực hiện</th>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                                <div class="card-footer clearfix">
+                                    <ul class="pagination pagination-sm m-0 float-right">
+                                        <li class="page-item">
+                                            <span th:if="${pages.isLast()}">
+                                            <a class="page-link"
+                                               th:href="@{/errorcodelist(pageNo=0,pageSize=${pages.size})}">&lt;</a>
+						                    </span>
+                                        </li>
+                                        <th:block th:each="i: ${#numbers.sequence(0, pages.totalPages - 1) }">
+                                            <li class="active">
+                                                <span th:if="${pages.totalPages == i}"
+                                                      class="selected">[[${i}+1]]</span>
+                                                <span
+                                                        th:unless="${pages.totalPages == i}"> <a class="page-link"
+                                                                                                 th:href="@{/errorcodelist( pageNo=${i},pageSize=${pages.size})}">[[${i}+1]]</a>
+							                    </span>
+                                            </li>
+                                        </th:block>
+                                        <li>
+                                            <span th:if="${pages.isFirst()}">
+                                                <a class="page-link"
+                                                   th:href="@{/errorcodelist(pageNo=${pages.totalPages -1},pageSize=${pages.size})}">&gt;</a>
+						                    </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+                <!-- /.row (main row) -->
+            </div>
+        </div>
+    </section>
+    <div id="toastsContainerTopRight" class="toasts-top-right fixed" style="right: 800px;">
+        <div class="toast bg-success fade" id="alert" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="mr-auto">Processing</strong>
+                <button data-dismiss="toast" type="button" class="ml-2 mb-1 close" aria-label="Close">
+                    <span aria-hidden="true"></span></button>
+            </div>
+            <div class="toast-body">Cập nhật thành công.</div>
+        </div>
+
+        <div class="toast bg-success fade" id="alert1" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="mr-auto">Processing</strong>
+                <button data-dismiss="toast" type="button" class="ml-2 mb-1 close" aria-label="Close">
+                    <span aria-hidden="true"></span></button>
+            </div>
+            <div class="toast-body">Thêm app code thành công.</div>
+        </div>
+        <div class="toast bg-danger fade" id="alert2" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="mr-auto">Processing</strong>
+                <button data-dismiss="toast" type="button" class="ml-2 mb-1 close" aria-label="Close">
+                    <span aria-hidden="true"></span></button>
+            </div>
+            <div class="toast-body">Thao tác thất bại.</div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        //show message when add and update success
+        $(document).ready(function () {
+            var url = window.location.href;
+            if (url.indexOf("updatesuccess") >= 0) {
+                $("#alert").addClass("show");
+                setInterval(function () {
+                    $("#alert").removeClass("show");
+                }, 2500);
+            }
+            if (url.indexOf("addsuccess") >= 0) {
+                $("#alert1").addClass("show");
+                setInterval(function () {
+                    $("#alert1").removeClass("show");
+                }, 2500);
+            }
+            if (url.indexOf("addunsuccess") >= 0) {
+                $("#alert2").addClass("show");
+                setInterval(function () {
+                    $("#alert2").removeClass("show");
+                }, 2500);
+            }
+        });
+        //find appcode
+        function search() {
+            if($("#searchValue").val()!=''){
+                $.ajax({
+                    url: "/errorcodelist/" + $("#searchValue").val(),
+                    type: 'GET',
+                    data: null,
+                    contentType: 'application/json',
+                    success: function (result) {
+                        $("#listresult").html('');
+                        var tmp = "";
+                        $.each(result, function (key, item) {
+                            var tmp2 = "";
+                            var tmp3 = "";
+                            if (item.status == 0) {
+                                tmp2 = "<td><input type=\"checkbox\" onclick=\"return false;\"></td>";
+                            }
+                            if (item.status == 1) {
+                                tmp2 = "<td><input type=\"checkbox\" checked onclick=\"return false;\"></td>";
+                            }
+
+                            if (item.status == 0) {
+                                tmp3 = "<button onclick=\"javascript:infodeactive(" + item.appCodeId + ")\"  type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#deleteError\">"
+                                    + "Kích hoạt <i class=\"fas fa-ban ml-2\"> </i>"
+                                    + "</button>"
+                            } else {
+                                tmp3 = "<button onclick=\"javascript:infodeactive(" + item.appCodeId + ")\" type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#deleteError\">"
+                                    + "Vô hiệu hóa<i class=\"fas fa-ban ml-2\"> </i>"
+                                    + "</button>";
+                            }
+                            tmp += "<tr>"
+                                + "<td>" + item.appCodeId + "</td>"
+                                + "<td>" + item.code + "</td>"
+                                + "<td>" + item.description + "</td>"
+                                + tmp2
+                                + "<td>" + item.modifiedBy + "</td>"
+                                + "<td>" + item.modifiedDatetime + "</td>"
+                                + "<td>"
+                                + "<button onclick=\"javascript:infoedit(" + item.appCodeId + ")\"  type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#editError\">"
+                                + "Sửa <i class=\"fas fa-edit ml-2\"> </i>"
+                                + "</button>"
+                                + tmp3
+                                + "</td>"
+                                + "</tr>";
+                        });
+                        $("#listresult").append(tmp);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }else{
+                window.location = window.location;
+            }
+        }
+
+        //add new appcode
+        function add() {
+            var data = {
+                description: $("#description2").val(),
+                code: $("#code2").val(),
+                status: 1
+            };
+            //console.log(data);
+            $.ajax({
+                url: "/errorcodelist",
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (result) {
+                    //console.log(result);
+                    var url = window.location.href;
+                    if (url.indexOf("?") >= 0) {
+                        window.location = window.location + "&addsuccess";
+                    } else {
+                        window.location = window.location + "?addsuccess";
+                    }
+                },
+                error: function (error) {
+                    var url = window.location.href;
+                    if (url.indexOf("?") >= 0) {
+                        window.location = window.location + "&addunsuccess";
+                    } else {
+                        window.location = window.location + "?addunsuccess";
+                    }
+                    //console.log(error);
+                }
+            });
+        }
+
+        //load info to modal of editting
+        function infoedit(id) {
+            $.ajax({
+                url: "/errorcodelist/find/" + id,
+                type: 'GET',
+                data: null,
+                contentType: 'application/json',
+                success: function (result) {
+                    $("#code").val(result.code);
+                    $("#description").val(result.description);
+                    $("#status").val(result.status);
+                    $("#id").val(result.appCodeId);
+                    //console.log(result)
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        //load info to modal of active and deactive
+        function infodeactive(id) {
+            $.ajax({
+                url: "/errorcodelist/find/" + id,
+                type: 'GET',
+                data: null,
+                contentType: 'application/json',
+                success: function (result) {
+                    $("#code1").val(result.code);
+                    $("#description1").val(result.description);
+                    $("#id1").val(result.appCodeId);
+                    if (result.status == 0) {
+                        $("#status1").removeAttr("checked");
+                    } else {
+                        $("#status1").attr("checked");
+                    }
+                    //console.log(result)
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        //update appcode
+        function update() {
+            var data = {
+                appCodeId: $("#id").val(),
+                description: $("#description").val(),
+                status: $("#status").val()
+            };
+            $.ajax({
+                url: "/errorcodelist",
+                type: 'PUT',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (result) {
+                    //console.log(result)
+                    window.location = "/errorcodelist?updatesuccess";
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        //active and deactive appcode
+        function active() {
+            var status = 0;
+            if ($("#status1").is(":checked")) {
+                status = 1;
+            }
+            var data = {
+                appCodeId: $("#id1").val(),
+                description: $("#description1").val(),
+                status: status
+            };
+            console.log(data)
+            $.ajax({
+                url: "/errorcodelist",
+                type: 'PUT',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (result) {
+                    //console.log(result)
+                    window.location = "/errorcodelist?updatesuccess";
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+    </script>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<th:block layout:fragment="script"></th:block>
+</body>
+</html>

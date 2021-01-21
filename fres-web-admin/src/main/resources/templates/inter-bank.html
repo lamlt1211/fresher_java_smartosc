@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Add/Edit Promotion Page</title>
+    <script th:src="@{/LTE/plugins/jquery/jquery.min.js}"></script>
+    <th:block layout:fragment="headerfiles">
+        <!-- daterange picker -->
+        <link rel="stylesheet" th:href="@{/LTE/plugins/daterangepicker/daterangepicker.css}">
+        <!-- Tempusdominus Bbootstrap 4 -->
+        <link rel="stylesheet"
+              th:href="@{/LTE/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css}">
+        <!-- DataTables -->
+        <link rel="stylesheet" th:href="@{/LTE/plugins/datatables-bs4/css/dataTables.bootstrap4.css}">
+        <!-- iCheck for checkboxes and radio inputs -->
+        <link rel="stylesheet" th:href="@{/LTE/plugins/icheck-bootstrap/icheck-bootstrap.min.css}">
+        <link rel="stylesheet" th:href="@{/LTE/plugins/jquery-ui/jquery-ui.css}">
+    </th:block>
+</head>
+<body>
+<!-- Content Wrapper. Contains page content -->
+<div layout:fragment="content" class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Ngân hàng trung gian</h1>
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a th:href="@{/home}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Bank Management</li>
+                    </ol>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Main row -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#createbank">
+                                Thêm <i
+                                    class="fas fa-plus ml-2"> </i>
+                            </button>
+                            <!-- Start search-->
+                            <div class="card-tools">
+                                <form method="GET" th:action="@{/interBanks}">
+                                    <div class="input-group input-group-sm" style="width: 150px;">
+                                        <input type="text" name="searchValue" id="searchValue"
+                                               th:value="${searchValue}" class="form-control float-right"
+                                               placeholder="Search">
+
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-default">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!--End search-->
+                        </div>
+
+                        <!--  add data-->
+                        <div class="modal fade" id="createbank" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle1">Thêm ngân hàng gửi</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form th:action="@{/interBanks/save}" th:object="${bankRequest}" method="POST">
+                                        <div class="modal-body">
+                                            <div class="poup">
+                                                <label>Ngân hàng
+                                                    <select name="bankId">
+                                                        <option th:each="bank : ${listBank}"
+                                                                th:value="${bank.bankId}"
+                                                                th:text="${bank.legalName}"></option>
+                                                    </select>
+                                                </label>
+                                            </div>
+                                            <div>
+                                                <label>Trạng thái
+                                                    <input type="checkbox" checked>
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng
+                                            </button>
+                                            <input type="submit" class="btn btn-primary" value="Lưu">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- edit data-->
+                        <!--  -->
+                        <div class="modal fade" id="editbank" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle2">Cập nhật ngân hàng gửi</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form action="#">
+                                        <input type="hidden" id="showID" />
+                                        <div class="modal-body">
+                                            <div class="poup">
+                                                <label>Ngân hàng</label>
+                                                <input type="text" id="name" class="form-control" readonly/>
+                                            </div>
+                                            <div>
+                                                <label>Trạng thái</label>
+                                                <input id="status" type="checkbox" checked/>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                            </button>
+                                            <button type="button" th:attr="onclick='javascript:update()'" class="btn btn-primary">Lưu</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Show data -->
+                        <div class="card-body">
+                            <table class="table table-bordered table-hover table-striped" style="text-align: center">
+                                <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã Ngân Hàng</th>
+                                    <th>Tên Ngân Hàng</th>
+                                    <th>Trạng thái</th>
+                                    <th>Người cập nhật</th>
+                                    <th>Ngày cập nhật</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="interBank,state : ${data.getContent()}">
+                                    <td th:text="${state.count}" style="text-align: right"></td>
+                                    <td th:text="${interBank.code}" style="text-align: left"></td>
+                                    <td th:text="${interBank.legalName}" style="text-align: left"></td>
+                                    <td>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox"
+                                                   th:checked="${interBank.status} == 1 ? ${true} : ${false}"
+                                                   class="custom-control-input" id="customSwitch1" disabled>
+                                            <label class="custom-control-label" for="customSwitch1"></label>
+                                        </div>
+                                    </td>
+                                    <td th:text="${interBank.modifiedBy}" style="text-align: left"></td>
+                                    <td th:text="${interBank.modifiedDatetime}" style="text-align: left"></td>
+                                    <td>
+                                        <button th:attr="onclick='javascript:show('+ ${interBank.id} +')'" type="button"
+                                                class="btn btn-primary" data-toggle="modal" data-target="#editbank">
+                                            Sửa <i class="fas fa-edit ml-2"> </i>
+                                        </button>
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã Ngân Hàng</th>
+                                    <th>Tên Ngân Hàng</th>
+                                    <th>Trạng thái</th>
+                                    <th>Người cập nhật</th>
+                                    <th>Ngày cập nhật</th>
+                                    <th></th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!--phân trang-->
+                        <div class="card-footer clearfix">
+                            <ul th:if="${data.totalPages > 0}"
+                                class="pagination pagination-sm m-0 float-right">.
+                                <li class="page-item"
+                                    th:classappend="${currentPage}>0?'':'disabled'"><a
+                                        class="page-link" th:with="preIndex=${currentPage - 1}"
+                                        th:href="@{/interBanks(searchValue=${searchValue},pageNo=${preIndex}<0?0:${preIndex})}">&laquo;</a>
+                                </li>
+                                <li class="page-item"
+                                    th:each="i : ${#numbers.sequence(0, data.totalPages-1)}"
+                                    th:classappend="${currentPage}==${i}?'active':''"><a
+                                        class="page-link" th:with="currentIndex=${i+1}"
+                                        th:text="${currentIndex}"
+                                        th:href="@{/interBanks(searchValue=${searchValue},pageNo=${i})}"></a>
+                                </li>
+                                <li class="page-item"
+                                    th:classappend="${currentPage}<${data.totalPages}-1?'':'disabled'"><a
+                                        class="page-link" th:with="postIndex=${currentPage + 1}"
+                                        th:href="@{/interBanks(searchValue=${searchValue},pageNo=${postIndex}>=${data.totalPages}?(${data.totalPages-1}):${postIndex})}">&raquo;</a>
+                                </li>
+                            </ul>
+                            <ul th:unless="${data.totalPages > 0}"
+                                class="pagination pagination-sm m-0 float-right">
+                                <li class="page-item" th:classappend="disabled"><a
+                                        class="page-link" th:with="preIndex=${currentPage - 1}"
+                                        href="#">&laquo;</a></li>
+                                <li class="page-item" th:classappend="'active'"><a
+                                        class="page-link" th:text="1"
+                                        th:href="@{/interBanks(searchValue=${searchValue},pageNo=${i})}"></a>
+                                </li>
+                                <li class="page-item" th:classappend="disabled"><a
+                                        class="page-link" th:with="postIndex=${currentPage + 1}"
+                                        href="#">&raquo;</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row (main row) -->
+        </div>
+        <!-- /.modal -->
+    </section>
+    <!-- /.content -->
+    <div id="toastsContainerTopRight" class="toasts-top-right fixed" style="right: 800px;">
+        <div class="toast bg-success fade" id="alert" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="mr-auto">Processing</strong>
+                <button data-dismiss="toast" type="button" class="ml-2 mb-1 close" aria-label="Close">
+                    <span aria-hidden="true"></span></button>
+            </div>
+            <div class="toast-body">Cập nhật thành công.</div>
+        </div>
+
+        <div class="toast bg-success fade" id="alert1" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="mr-auto">Processing</strong>
+                <button data-dismiss="toast" type="button" class="ml-2 mb-1 close" aria-label="Close">
+                    <span aria-hidden="true"></span></button>
+            </div>
+            <div class="toast-body">Thêm thành công.</div>
+        </div>
+        <div class="toast bg-danger fade" id="alert2" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="mr-auto">Processing</strong>
+                <button data-dismiss="toast" type="button" class="ml-2 mb-1 close" aria-label="Close">
+                    <span aria-hidden="true"></span></button>
+            </div>
+            <div class="toast-body">Thao tác thất bại. Ngân hàng đã tồn tại</div>
+        </div>
+    </div>
+
+    <script th:inline="javascript" >
+
+        $(document).ready(function () {
+            var url = window.location.href;
+            if (url.indexOf("updatesuccess") >= 0) {
+                $("#alert").addClass("show");
+                setInterval(function () {
+                    $("#alert").removeClass("show");
+                }, 2500);
+            }
+            if (url.indexOf("addsuccess") >= 0) {
+                $("#alert1").addClass("show");
+                setInterval(function () {
+                    $("#alert1").removeClass("show");
+                }, 2500);
+            }
+            if (url.indexOf("adderror") >= 0) {
+                $("#alert2").addClass("show");
+                setInterval(function () {
+                    $("#alert2").removeClass("show");
+                }, 2500);
+            }
+        });
+        function show(id) {
+            $.ajax({
+                url: "/interBanks/" + id,
+                type: 'GET',
+                data: null,
+                contentType: 'application/json',
+                success: function (result) {
+                    console.log(result);
+                    $("#name").val(result.legalName);
+                    $("#showID").val(result.id);
+                    if(result.status==0){
+                        $("#status").removeAttr('checked');
+                    }
+                    else {
+                        $("#status").attr('checked');
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function update() {
+            var status = 0;
+            if ($("#status").is(":checked")) {
+                status = 1;
+            }
+            var data = {
+                id: $("#showID").val(),
+
+                status: status
+            };
+            console.log(data);
+            $.ajax({
+                url: "/interBanks/update",
+                type: 'PUT',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (result) {
+                    window.location = "/interBanks?updatesuccess";
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+    </script>
+</div>
+<!-- /.content-wrapper -->
+
+
+
+<th:block layout:fragment="script">
+
+    <script th:src="@{/LTE/plugins/jquery/jquery.min.js}"></script>
+    <script th:src="@{/LTE/plugins/jquery-ui/jquery-ui.js}"></script>
+    <!-- InputMask -->
+    <script th:src="@{/LTE/plugins/moment/moment.min.js}"></script>
+    <!-- date-range-picker -->
+    <script th:src="@{/LTE/plugins/daterangepicker/daterangepicker.js}"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script th:src="@{/LTE/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js}"></script>
+    <!-- DataTables -->
+    <script th:src="@{/LTE/plugins/datatables/jquery.dataTables.js}"></script>
+    <script th:src="@{/LTE/plugins/datatables-bs4/js/dataTables.bootstrap4.js}"></script>
+
+</th:block>
+
+</body>
+</html>

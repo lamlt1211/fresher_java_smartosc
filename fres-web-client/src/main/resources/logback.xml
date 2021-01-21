@@ -1,0 +1,77 @@
+<configuration>
+    <appender name="out" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--
+    <appender name="emailAppender" class="ch.qos.logback.classic.net.SMTPAppender">
+        <smtpHost>OUR-SMTP-HOST-ADDRESS</smtpHost>
+        <to>EMAIL-RECIPIENT-1</to>
+        <to>EMAIL-RECIPIENT-2</to>
+        <from>SENDER-EMAIL-ADDRESS</from>
+        <subject>BAELDUNG: %logger{20} - %msg</subject>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </layout>
+    </appender>
+
+    <appender name="emailAppenderCustomBufferSize" class="ch.qos.logback.classic.net.SMTPAppender">
+        <smtpHost>OUR-SMTP-HOST-ADDRESS</smtpHost>
+        <to>EMAIL-RECIPIENT</to>
+        <from>SENDER-EMAIL-ADDRESS</from>
+        <subject>BAELDUNG: %logger{20} - %msg</subject>
+        <layout class="ch.qos.logback.classic.html.HTMLLayout"/>
+        <cyclicBufferTracker class="ch.qos.logback.core.spi.CyclicBufferTracker">
+
+            <bufferSize>5</bufferSize>
+        </cyclicBufferTracker>
+    </appender>
+
+    <appender name="emailAppenderGmail" class="ch.qos.logback.classic.net.SMTPAppender">
+        <smtpHost>smtp.gmail.com</smtpHost>
+        <smtpPort>587</smtpPort>
+        <STARTTLS>true</STARTTLS>
+        <asynchronousSending>false</asynchronousSending>
+        <username>SENDER-EMAIL@gmail.com</username>
+        <password>GMAIL-ACCT-PASSWORD</password>
+        <to>EMAIL-RECIPIENT</to>
+        <from>SENDER-EMAIL@gmail.com</from>
+        <subject>BAELDUNG: %logger{20} - %msg</subject>
+        <layout class="ch.qos.logback.classic.html.HTMLLayout"/>
+    </appender>
+    -->
+    <property name="LOG_FILE" value="LogFile" />
+    <property name="LOG_DIR" value="E:/Projects/VTG/WIP/PROGRAMS/hanoi-java-fresher-proj/team-2/fres-web-client/logs/" />
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.gz</fileNamePattern>
+
+            <!-- keep 30 days' worth of history capped at 3GB total size -->
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+<!--    <logger name="com.smartosc.training" level="INFO" />-->
+
+    <root level="info">
+        <appender-ref ref="out"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

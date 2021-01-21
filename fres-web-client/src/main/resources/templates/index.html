@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en">
+<head>
+    <title>Vegefoods</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <th:block th:include="layout/web-header"/>
+</head>
+<body class="goto-here">
+<th:block th:include="layout/wed-menu"/>
+
+<section class="hero" id="home-section">
+    <div class="home-slider owl-carousel">
+        <div class="slider-item" th:style="'background-image:url('+ @{/images/bg_1.jpg} +');'">
+            <div class="overlay"></div>
+            <div class="container">
+                <div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
+
+                    <div class="col-md-12 ftco-animate text-center">
+                        <h1 class="mb-2">We serve Fresh Vegestables &amp; Fruits</h1>
+                        <h2 class="subheading mb-4">We deliver organic vegetables &amp; fruits</h2>
+                        <p><a class="btn btn-primary" th:href="@{/shop}">View Details</a></p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="slider-item" th:style="'background-image:url('+ @{/images/bg_2.jpg} + ');'">
+            <div class="overlay"></div>
+            <div class="container">
+                <div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
+                    <div class="col-sm-12 ftco-animate text-center">
+                        <h1 class="mb-2">100% Fresh &amp; Organic Foods</h1>
+                        <h2 class="subheading mb-4">We deliver organic vegetables &amp; fruits</h2>
+                        <p><a class="btn btn-primary" href="#">View Details</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center mb-3 pb-3">
+            <div class="col-md-12 heading-section text-center ftco-animate">
+                <span class="subheading">Promotional Products</span>
+                <h2 class="mb-4">Promotional Products</h2>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <th:block th:if="${listNewestProducts != null}">
+                <div class="col-md-6 col-lg-3 ftco-animate"
+                     th:each="product : ${listNewestProducts}">
+                    <div class="product">
+                        <a href="#" th:href="@{/detail/{id}(id=${product.productId})}" class="img-prod">
+                            <img class="img-fluid" th:src="@{${product.image}}" style="height: 200px; width: auto"
+                                 alt="Colorlib Template">
+                        </a>
+                        <div class="text py-3 pb-4 px-3 text-center">
+                            <h3>
+                                <a href="#"><p th:text="${product.productName}"></p></a>
+                            </h3>
+                            <div class="d-flex">
+                                <th:block th:if="${product.promotions != null}">
+                                    <div class="pricing" th:each="promotion : ${product.promotions}">
+                                        <p class="price"
+                                           th:with="result=${product.price -(product.price * promotion.percent / 100)}">
+                                            <span class="price-sale"
+                                                  th:text="${#numbers.formatDecimal(result, 0, 'COMMA', 0, 'POINT')}+ ' đ  '"></span>
+                                            <span class="status thuyxinh"
+                                                  th:text="'-'+${#numbers.formatDecimal(promotion.percent, 0, 'COMMA', 0, 'POINT')}+' %'"></span>
+                                        </p>
+                                        <p>
+                                            <span class="mr-2 price-dc thuybeo"
+                                                  th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}+ ' đ '"></span>
+                                        </p>
+                                    </div>
+                                </th:block>
+                                <th:block th:unless="${product.promotions != null}">
+                                    <div class="pricing">
+                                        <p class="price">
+                                            <span class="price-sale thuybeo"
+                                                  th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}+ ' đ '"></span>
+                                        </p>
+                                    </div>
+                                </th:block>
+                            </div>
+                            <div class="bottom-area d-flex px-3">
+                                <div class="m-auto d-flex">
+                                    <a id="coom" href="" th:data-id="${product.productId}"
+                                       class="add-to-cartInfo d-flex justify-content-center align-items-center text-center add">
+                                        <span><i class="ion-ios-menu"></i></span>
+                                    </a> <a th:href="@{/detail/{id}(id=${product.productId})}"
+                                            class="buy-now d-flex justify-content-center align-items-center mx-1">
+                                    <span><i class="ion-ios-heart"></i></span>
+                                </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+                <div class="bottom-area">
+                    <a href="/promotion" class="btn btn-primary">See More</a>
+                </div>
+            </th:block>
+        </div>
+    </div>
+    </div>
+</section>
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center mb-3 pb-3">
+            <div class="col-md-12 heading-section text-center ftco-animate">
+                <span class="subheading">Best sell Products</span>
+                <h2 class="mb-4">HOT Products</h2>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <th:block th:if="${listHotProducts != null}">
+                <div class="col-md-6 col-lg-3 ftco-animate"
+                     th:each="product : ${listHotProducts}">
+                    <div class="product">
+                        <a href="#" th:href="@{/detail/{id}(id=${product.productId})}" class="img-prod">
+                            <img class="img-fluid" th:src="@{${product.image}}" style="height: 200px; width: auto"
+                                 alt="Colorlib Template">
+                            <!--                            <span th:each="promotion : ${product.promotions}">-->
+                            <!--                                <span class="status"-->
+                            <!--                                      th:text="${#numbers.formatDecimal(promotion.percent, 0, 'COMMA', 0, 'POINT')}+' %'"></span>-->
+                            <!--                            </span>-->
+                        </a>
+                        <div class="text py-3 pb-4 px-3 text-center">
+                            <h3>
+                                <a href="#"><p th:text="${product.productName}"></p></a>
+                            </h3>
+                            <div class="d-flex">
+                                <th:block th:if="${product.promotions != null}">
+                                    <div class="pricing" th:each="promotion : ${product.promotions}">
+                                        <p class="price"
+                                           th:with="result=${product.price -(product.price * promotion.percent / 100)}">
+                                            <span class="price-sale"
+                                                  th:text="${#numbers.formatDecimal(result, 0, 'COMMA', 0, 'POINT')}+ ' đ  '"></span>
+                                            <span class="status thuyxinh"
+                                                  th:text="'-'+${#numbers.formatDecimal(promotion.percent, 0, 'COMMA', 0, 'POINT')}+' %'"></span>
+                                        </p>
+                                        <p>
+                                            <span class="mr-2 price-dc thuybeo"
+                                                  th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}+ ' đ '"></span>
+                                        </p>
+                                    </div>
+                                </th:block>
+                                <th:block th:unless="${product.promotions != null}">
+                                    <div class="pricing">
+                                        <p class="price">
+                                            <span class="price-sale thuybeo"
+                                                  th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
+                                        </p>
+                                    </div>
+                                </th:block>
+                            </div>
+                            <div class="bottom-area d-flex px-3">
+                                <div class="m-auto d-flex">
+                                    <a id="coom" href="" th:data-id="${product.productId}"
+                                       class="add-to-cartInfo d-flex justify-content-center align-items-center text-center add">
+                                        <span><i class="ion-ios-menu"></i></span>
+                                    </a> <a th:href="@{/detail/{id}(id=${product.productId})}"
+                                            class="buy-now d-flex justify-content-center align-items-center mx-1">
+                                    <span><i class="ion-ios-heart"></i></span>
+                                </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </div>
+</section>
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center mb-3 pb-3">
+            <div class="col-md-12 heading-section text-center ftco-animate">
+                <span class="subheading">Our Products</span>
+                <h2 class="mb-4">Our Products</h2>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <th:block th:if="${products != null}">
+                <div class="col-md-6 col-lg-3 ftco-animate"
+                     th:each="product : ${products}">
+                    <div class="product">
+                        <a href="#" th:href="@{/detail/{id}(id=${product.productId})}" class="img-prod">
+                            <img class="img-fluid" th:src="@{${product.image}}" style="height: 200px; width: auto"
+                                 alt="Colorlib Template">
+                        </a>
+                        <div class="text py-3 pb-4 px-3 text-center">
+                            <h3>
+                                <a href="#"><p th:text="${product.productName}"></p></a>
+                            </h3>
+                            <div class="d-flex">
+                                <th:block th:if="${product.promotions != null}">
+                                    <div class="pricing" th:each="promotion : ${product.promotions}">
+                                        <p class="price"
+                                           th:with="result=${product.price -(product.price * promotion.percent / 100)}">
+                                            <span class="price-sale"
+                                                  th:text="${#numbers.formatDecimal(result, 0, 'COMMA', 0, 'POINT')}+ ' đ  '"></span>
+                                            <span class="status thuyxinh"
+                                                  th:text="'-'+${#numbers.formatDecimal(promotion.percent, 0, 'COMMA', 0, 'POINT')}+' %'"></span>
+                                        </p>
+                                        <p>
+                                            <span class="mr-2 price-dc thuybeo"
+                                                  th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}+ ' đ '"></span>
+                                        </p>
+                                    </div>
+                                </th:block>
+                                <th:block th:unless="${product.promotions != null}">
+                                    <div class="pricing">
+                                        <p class="price">
+                                            <span class="price-sale thuybeo"
+                                                  th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
+                                        </p>
+                                    </div>
+                                </th:block>
+                            </div>
+                            <div class="bottom-area d-flex px-3">
+                                <div class="m-auto d-flex">
+                                    <a id="coom" href="" th:data-id="${product.productId}"
+                                       class="add-to-cartInfo d-flex justify-content-center align-items-center text-center add">
+                                        <span><i class="ion-ios-menu"></i></span>
+                                    </a> <a th:href="@{/detail/{id}(id=${product.productId})}"
+                                            class="buy-now d-flex justify-content-center align-items-center mx-1">
+                                    <span><i class="ion-ios-heart"></i></span>
+                                </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+                <div class="bottom-area">
+                    <a href="/shop" class="btn btn-primary">See More</a>
+                </div>
+            </th:block>
+        </div>
+    </div>
+    </div>
+</section>
+<hr>
+<th:block th:include="layout/web-footer"/>
+<script>
+    $(document).ready(function () {
+        $('.add').click(function (event) {
+            event.preventDefault();
+            var productId = $(this).attr("data-id");
+            $.ajax({
+                url: "/cart/buycart",
+                type: "GET",
+                data: {
+                    id: productId,
+                },
+                success: function (value) {
+                    $('.sizeCart').html("[" + value + "]");
+                }
+            })
+        });
+    });
+</script>
+</body>
+</html>

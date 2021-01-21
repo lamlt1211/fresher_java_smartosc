@@ -1,0 +1,348 @@
+<!--HUUPD-->
+<!-- thanhttt -call API add & edit -->
+<!DOCTYPE html>
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <title>Product Management Page</title>
+        <script th:src="@{/LTE/plugins/jquery/jquery.min.js}"></script>
+    <th:block layout:fragment="headerfiles">
+        <!-- Toastr -->
+        <link rel="stylesheet" th:href="@{/LTE/plugins/toastr/toastr.min.css}"/>
+    </th:block>
+    <link rel="stylesheet" th:href="@{/static/css/bank.css}"/>
+</head>
+<body>
+
+<!-- Content Wrapper. Contains page content -->
+<div layout:fragment="content" class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <!-- open /.container-fluid -->
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Danh mục ngân hàng nhận trực tiếp</h1>
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a th:href="@{/home}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Danh mục ngân hàng</li>
+                    </ol>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Main row -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createbank">
+                                Thêm <i class="fas fa-plus ml-2"> </i>
+                            </button>
+                            <button type="button" class="btn btn-xs btn-block btn-warning" data-toggle="modal"
+                                    data-target="#modal-warning"
+                                    style="width: 100px; text-transform: uppercase; float: left; margin-left: 15px;"
+                                    th:styleappend="${errors == null} ? 'display: none;' : 'display:block;'">
+                                <i class="fas fa-bell"></i>&nbsp;&nbsp;Error Found
+                            </button>
+                            <!-- Start search-->
+                            <div class="card-tools">
+                                <form method="GET" th:action="@{/directBanks}">
+                                    <div class="input-group input-group-sm" style="width: 150px;">
+                                        <input type="text" name="searchValue" id="searchValue"
+                                               th:value="*{searchValue}" class="form-control float-right"
+                                               placeholder="Search">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-default">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <!--End search-->
+                            </div>
+                        </div>
+
+                        <!-- add data modal-->
+                        <!-- thanhttt -->
+                        <div class="modal fade" id="createbank" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle1">Thêm ngân hàng gửi</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form th:action="@{/directBanks/save}" th:object="${bankRequest}" method="POST">
+                                        <div class="modal-body">
+                                            <div class="poup">
+                                                <label>Ngân hàng
+                                                    <select name="bankId">
+                                                        <option th:each="bank : ${listBank}"
+                                                                th:value="${bank.bankId}"
+                                                                th:text="${bank.legalName}"></option>
+                                                    </select>
+                                                </label>
+                                            </div>
+                                            <div>
+                                                <label>Trạng thái
+                                                    <input type="checkbox" checked>
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng
+                                            </button>
+                                            <input type="submit" class="btn btn-primary" value="Lưu">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end add data modal-->
+
+                        <!-- edit data-->
+                        <!-- thanhttt -->
+                        <div class="modal fade" id="editbank" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle2">Cập nhật ngân hàng gửi</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form action="">
+                                        <input type="hidden" id="showID" />
+                                        <div class="modal-body">
+                                            <div class="poup">
+                                                <label>Ngân hàng</label>
+                                                <input type="text" id="name" class="form-control" readonly/>
+                                            </div>
+                                            <div>
+                                                <label>Trạng thái</label>
+                                                <input id="status" type="checkbox" checked/>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                            </button>
+                                            <button type="button" th:attr="onclick='javascript:update()'" class="btn btn-primary">Lưu</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end edit data modal-->
+
+                        <!--Show data -->
+                        <div class="card-body">
+                            <table class="table table-bordered table-hover table-striped" style="text-align: center">
+                                <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã Ngân Hàng</th>
+                                    <th>Tên Ngân Hàng</th>
+                                    <th>Trạng thái</th>
+                                    <th>Người cập nhật</th>
+                                    <th>Ngày cập nhật</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="directBank,state : ${data.getContent()}">
+                                    <td th:text="${state.count}" style="text-align: right"></td>
+                                    <td th:text="${directBank.code}" style="text-align: left"></td>
+                                    <td th:text="${directBank.legalName}" style="text-align: left"></td>
+                                    <td>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox"
+                                                   th:checked="${directBank.status} == 1 ? ${true} : ${false}"
+                                                   class="custom-control-input" id="customSwitch1" disabled>
+                                            <label class="custom-control-label" for="customSwitch1"></label>
+                                        </div>
+                                    </td>
+
+                                    <td th:text="${directBank.modifiedBy}" style="text-align: left"></td>
+                                    <td th:text="${directBank.modifiedDatetime}" style="text-align: left"></td>
+                                    <td>
+                                        <button th:attr="onclick='javascript:show('+ ${directBank.id} +')'" type="button"
+                                                class="btn btn-primary" data-toggle="modal" data-target="#editbank">
+                                            Sửa <i class="fas fa-edit ml-2"> </i>
+                                        </button>
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã Ngân Hàng</th>
+                                    <th>Tên Ngân Hàng</th>
+                                    <th>Trạng thái</th>
+                                    <th>Người cập nhật</th>
+                                    <th>Ngày cập nhật</th>
+                                    <th></th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!--phân trang-->
+                        <div class="card-footer clearfix">
+                            <ul th:if="${data.totalPages > 0}"
+                                class="pagination pagination-sm m-0 float-right">
+                                <li class="page-item"
+                                    th:classappend="${currentPage}>0?'':'disabled'"><a
+                                        class="page-link" th:with="preIndex=${currentPage - 1}"
+                                        th:href="@{/directBanks(searchValue=${searchValue},pageNo=${preIndex}<0?0:${preIndex})}">&laquo;</a>
+                                </li>
+                                <li class="page-item"
+                                    th:each="i : ${#numbers.sequence(0, data.totalPages-1)}"
+                                    th:classappend="${currentPage}==${i}?'active':''"><a
+                                        class="page-link" th:with="currentIndex=${i+1}"
+                                        th:text="${currentIndex}"
+                                        th:href="@{/directBanks(searchValue=${searchValue},pageNo=${i})}"></a>
+                                </li>
+                                <li class="page-item"
+                                    th:classappend="${currentPage}<${data.totalPages}-1?'':'disabled'"><a
+                                        class="page-link" th:with="postIndex=${currentPage + 1}"
+                                        th:href="@{/directBanks(searchValue=${searchValue},pageNo=${postIndex}>=${data.totalPages}?(${data.totalPages-1}):${postIndex})}">&raquo;</a>
+                                </li>
+                            </ul>
+                            <ul th:unless="${data.totalPages > 0}"
+                                class="pagination pagination-sm m-0 float-right">
+                                <li class="page-item" th:classappend="disabled"><a
+                                        class="page-link" th:with="preIndex=${currentPage - 1}"
+                                        href="#">&laquo;</a></li>
+                                <li class="page-item" th:classappend="'active'"><a
+                                        class="page-link" th:text="1"
+                                        th:href="@{/directBanks(searchValue=${searchValue},pageNo=${i})}"></a>
+                                </li>
+                                <li class="page-item" th:classappend="disabled"><a
+                                        class="page-link" th:with="postIndex=${currentPage + 1}"
+                                        href="#">&raquo;</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.row (main row) -->
+            </div>
+        </div>
+    </section>
+    <!-- thanhttt message -->
+    <div id="toastsContainerTopRight" class="toasts-top-right fixed" style="right: 800px;">
+        <div class="toast bg-success fade" id="alert" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="mr-auto">Processing</strong>
+                <button data-dismiss="toast" type="button" class="ml-2 mb-1 close" aria-label="Close">
+                    <span aria-hidden="true"></span></button>
+            </div>
+            <div class="toast-body">Cập nhật thành công.</div>
+        </div>
+
+        <div class="toast bg-success fade" id="alert1" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="mr-auto">Processing</strong>
+                <button data-dismiss="toast" type="button" class="ml-2 mb-1 close" aria-label="Close">
+                    <span aria-hidden="true"></span></button>
+            </div>
+            <div class="toast-body">Thêm thành công.</div>
+        </div>
+        <div class="toast bg-danger fade" id="alert2" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="mr-auto">Processing</strong>
+                <button data-dismiss="toast" type="button" class="ml-2 mb-1 close" aria-label="Close">
+                    <span aria-hidden="true"></span></button>
+            </div>
+            <div class="toast-body">Thêm thất bại - đã tồn tại.</div>
+        </div>
+    </div>
+
+    <!-- /.content -->
+    <script th:inline="javascript" >
+        $(document).ready(function () {
+            var url = window.location.href;
+            if(url.indexOf("successful")>=0){
+                $("#alert").addClass("show");
+                setInterval(function(){ $("#alert").removeClass("show"); }, 2500);
+            }
+            if(url.indexOf("addSuccessful")>=0){
+                $("#alert1").addClass("show");
+                setInterval(function(){ $("#alert1").removeClass("show"); }, 2500);
+            }
+            if(url.indexOf("error")>=0){
+                $("#alert2").addClass("show");
+                setInterval(function(){ $("#alert2").removeClass("show"); }, 2500);
+            }
+        })
+        function show(id) {
+            $.ajax({
+                url: "/directBanks/" + id,
+                type: 'GET',
+                data: null,
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.status==0){
+                        $("#status").removeAttr("checked");
+                    }else {
+                        $("#status").attr("checked");
+                    }
+                    $("#name").val(result.legalName);
+                    $("#showID").val(result.id);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function update() {
+            var status = 0;
+            if ($("#status").is(":checked")) {
+                status = 1;
+            }
+            var data = {
+                id: $("#showID").val(),
+
+                status: status
+            };
+            console.log(data);
+            $.ajax({
+                url: "/directBanks/update",
+                type: 'PUT',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (result) {
+                    window.location = "/directBanks?successful";
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+    </script>
+    <!-- ./thanhttt -->
+</div>
+<!-- /.content-wrapper -->
+
+<th:block layout:fragment="script"></th:block>
+</body>
+
+</html>
